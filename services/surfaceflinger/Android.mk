@@ -128,10 +128,30 @@ ifeq ($(TARGET_USES_QCOM_BSP), true)
         ExSurfaceFlinger/ExHWComposer.cpp
 endif
 
+
 ifeq ($(TARGET_HAVE_UI_BLUR),true)
     LOCAL_C_INCLUDES += $(TARGET_OUT_HEADERS)/ui
     LOCAL_SHARED_LIBRARIES += libuiblur
     LOCAL_CFLAGS += -DUI_BLUR
+endif
+
+ifeq ($(BOARD_USES_HWC_SERVICES), true)
+    LOCAL_CFLAGS += -DUSES_HWC_SERVICES
+    LOCAL_SHARED_LIBRARIES += libExynosHWCService
+    LOCAL_C_INCLUDES += \
+        $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include \
+        $(TOP)/hardware/samsung_slsi-$(TARGET_SLSI_VARIANT)/$(TARGET_BOARD_PLATFORM)/libhwcService \
+        $(TOP)/hardware/samsung_slsi-$(TARGET_SLSI_VARIANT)/$(TARGET_BOARD_PLATFORM)/include \
+        $(TOP)/hardware/samsung_slsi-$(TARGET_SLSI_VARIANT)/$(TARGET_SOC)/include \
+        $(TOP)/hardware/samsung_slsi-$(TARGET_SLSI_VARIANT)/$(TARGET_SOC)/libhwcmodule \
+        $(TOP)/hardware/samsung_slsi-$(TARGET_SLSI_VARIANT)/exynos/libhwc \
+        $(TOP)/hardware/samsung_slsi-$(TARGET_SLSI_VARIANT)/exynos/include \
+        $(TOP)/hardware/samsung_slsi-$(TARGET_SLSI_VARIANT)/exynos/libexynosutils \
+        $(TOP)/system/core/libsync/include
+
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+        $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+
 endif
 
 LOCAL_MODULE := libsurfaceflinger
